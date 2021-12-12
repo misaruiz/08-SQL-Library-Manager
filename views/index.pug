@@ -1,14 +1,9 @@
 extends layout
 
 block content
-  div.row
-    form(action='/books/results', method='post')
-      div.input-group.mb-3
-        input#search.form-control(type='search' name='search' placeholder='What would you like to find?')
-        input.btn.btn-outline-secondary(type='submit' value='Search')
     
   
-    
+  h2= title  
   table.table.table-hover
       thead
         tr
@@ -30,12 +25,12 @@ block content
       nav      
         ul.pagination
           while i < pages
-            - var m = i++ + 1;  
-            if(m == page) 
+            - var pageNumber = i++ + 1;  
+            if(pageNumber == page) 
               li.page-item.active    
-                a.page-link(href=`/books/page/${m}`)= m
+                a.page-link(href=`/books/page-${pageNumber}`)= pageNumber
             else
               li.page-item
-                a.page-link(href=`/books/page/${m}`)= m
+                a.page-link(href=`/books/page-${pageNumber}`)= pageNumber
     div.col-auto
       a.btn.btn-primary(href='/books/new') Create New Book

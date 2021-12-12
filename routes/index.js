@@ -4,7 +4,7 @@ var router = express.Router();
 // Import models
 const Book = require('../models').Book;
 
-// Import Operators
+// Import Sequelize Operators
 const { Op } = require("sequelize");
 
 // Handler function yo wrap each route
@@ -20,13 +20,12 @@ function asyncHandler(cb){
 
 /* GET home page. */
 router.get('/', asyncHandler(async (req, res, next) => {
-
-  res.redirect('/books/page/1');
-  // res.render('index', { title: 'Express' });
+  res.redirect('/books/page-1');
 }));
 
-// Shows the full list of books
-router.get('/books/page/:page', asyncHandler(async (req, res, next) => {
+// GET full list of books
+router.get('/books/page-:page', asyncHandler(async (req, res, next) => {
+
   // pagination
   let pageSize = 10;
   const paginate = ({ page }) => {
@@ -50,45 +49,26 @@ router.get('/books/page/:page', asyncHandler(async (req, res, next) => {
 
   const totalBooks = await Book.count();
   const pages = Math.ceil((totalBooks / pageSize));
-
-  try {
-
-  } catch(error) {
-    
-  }
+  
   if(req.params.page < pages + 1) {
-    res.render('index', { title: 'Golden Hill Public Library', books, page: req.params.page, pages });
+    res.render('index', { title: 'Book Database', books, page: req.params.page, pages });
   } else {
-    res.sendStatus(404);
+    const error = new Error('Page not found');
+    error.status = 404;
+    throw error;
   }
 
 }));
 
-// Display Search Results
+// POST Search Results
 router.post('/books/results', asyncHandler(async (req, res, next) => {
   const books = await Book.findAll({ 
     where: {
       [Op.or]: [
-        {
-          title: {
-            [Op.substring]: req.body.search,
-          }
-        },
-        {
-          author: {
-            [Op.substring]: req.body.search,
-          }
-        },
-        {
-          genre: {
-            [Op.substring]: req.body.search,
-          }
-        },
-        {
-          year: {
-            [Op.substring]: req.body.search,
-          }
-        }
+        { title: { [Op.substring]: req.body.search, } },
+        { author: { [Op.substring]: req.body.search, } },
+        { genre: { [Op.substring]: req.body.search, } },
+        { year: { [Op.substring]: req.body.search, } }
       ]
     },
     order: [
@@ -96,9 +76,13 @@ router.post('/books/results', asyncHandler(async (req, res, next) => {
       [ "year", "ASC" ]
     ]
   });
- 
 
-  res.render('index', { title: 'Golden Hill Public Library', books });
+  if (books.length > 0) {
+    res.render('index', { title: 'Search Results', books });
+  } else {
+    res.render('no-results', { title: 'No catalog results found for', books, search: req.body.search });
+  }
+ 
 }));
 
 // Shows the create new book form
@@ -126,7 +110,14 @@ router.post('/books/new', asyncHandler(async (req, res, next) => {
 // Shows book detail form
 router.get('/books/:id', asyncHandler(async (req, res, next) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('update-book', { title: 'Update Book', book });
+  if (book) {
+    res.render('update-book', { title: 'Update Book', book });
+  } else {
+    const error = new Error('Page not found');
+    error.status = 404;
+    throw error;
+  }
+  
 }));
 
 // Updates book info in the database
@@ -138,7 +129,10 @@ router.post('/books/:id', asyncHandler(async (req, res, next) => {
       await book.update(req.body);
       res.redirect('/');
     } else {
-      res.sendStatus(404);
+      // res.sendStatus(404);
+      const error = new Error('Page not found');
+      error.status = 404;
+      throw error;
     }
   } catch (error) {
     if(error.name === "SequelizeValidationError") {
@@ -158,7 +152,10 @@ router.post('/books/:id/delete', asyncHandler(async (req, res, next) => {
     await book.destroy();
     res.redirect('/');
   } else {
-    res.sendStatus(404);
+    // res.sendStatus(404);
+    const error = new Error('Page not found');
+    error.status = 404;
+    throw error;
   }
 }));
 

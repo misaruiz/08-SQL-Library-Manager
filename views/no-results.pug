@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h2= `${title} "${search}"`
+  p 
+    | Try
+    br 
+    | - Confirming the spelling of your search words
+    br 
+    | - Using other words for the subject of your searches
+    br 
+    |- Providing more letters of the search words if you are using wildcards
+  h5.mt-5 Want to add a new book?
+  a.btn.btn-primary(href='/books/new') Create New Book

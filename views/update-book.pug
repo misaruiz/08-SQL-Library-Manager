@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    h3= title
+    form(action=`/books/${book.id}`, method='post')
+        div.row.mb-3
+            label.col-sm-2.col-form-label(for='title') Title
+            div.col-sm-10
+                input#title.form-control(name='title' type='text' value=book.title)
+        div.row.mb-3
+            label.col-sm-2.col-form-label(for='author') Author
+            div.col-sm-10
+                input#author.form-control(name='author' type='text' value=book.author)
+        div.row.mb-3 
+            label.col-sm-2.col-form-label(for='genre') Genre
+            div.col-sm-10
+                input#genre.form-control(name='genre' type='text' value=book.genre)
+        div.row.mb-3
+            label.col-sm-2.col-form-label(for='year') Year
+            div.col-sm-10
+                input#year.form-control(name='year' type='text' value=book.year)
+        div.row.justify-content-end 
+            div.col-auto.text-end
+                input.btn.btn-primary.me-2(type='submit' value='Update Book')
+                a.btn.btn-outline-secondary.me-2(href='/') Cancel
+                br
+    div.row.justify-content-end
+        div.col-auto
+            form(method='post' action=`/books/${book.id}/delete` onsubmit="return confirm('Do you really want to delete this book?');")
+                input.text-danger.border-0.bg-transparent.mt-3(type='submit' value='Delete Book')
+                

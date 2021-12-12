@@ -1,21 +1,37 @@
 extends layout
 
 block content
-    h1 New Book
-    form
-        p
-            label(for='title') Title
-            input#title(name='title' type='text')
-        p
-            label(for='author') Author
-            input#author(name='author' type='text')
-        p
-            label(for='genre') Genre
-            input#genre(name='genre' type='text')
-        p
-            label(for='year') Year
-            input#year(name='year' type='text')
-        p
-            input(type='submit' value='Create New Book')
-        p
-            a.button(href='all_books.html') Cancel
+    h2= title
+    form(action='/books/new', method='post')
+        div.row.mb-3.g-3
+            label.col-sm-2.col-form-label(for='title') Title
+            div.col-sm-10
+                if(errors)
+                    each error in errors
+                        if(error.path == 'title')
+                            input#title.form-control.is-invalid(name='title' type='text')
+                            div.invalid-feedback= error.message
+                else
+                    input#title.form-control(name='title' type='text' value=book.title placeholder='Required')
+        div.row.mb-3
+            label.col-sm-2.col-form-label(for='author') Author
+            div.col-sm-10
+                if(errors)
+                    each error in errors
+                        if(error.path == 'author')
+                            input#author.form-control.is-invalid(name='author' type='text')
+                            div.invalid-feedback= error.message
+                else
+                    input#author.form-control(name='author' type='text' value=book.author placeholder='Required')
+        div.row.mb-3 
+            label.col-sm-2.col-form-label(for='genre') Genre
+            div.col-sm-10
+                input#genre.form-control(name='genre' type='text' value=book.genre)
+        div.row.mb-3
+            label.col-sm-2.col-form-label(for='year') Year
+            div.col-sm-10
+                input#year.form-control(name='year' type='text' value=book.year)
+        div.row.justify-content-end 
+            div.col-auto.text-end
+                input.btn.btn-primary.me-2(type='submit' value='Create New Book')
+                a.btn.btn-outline-secondary.me-2(href='/') Cancel

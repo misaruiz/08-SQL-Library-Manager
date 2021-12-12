@@ -17,6 +17,7 @@ const sequelize = new Sequelize({
   storage: 'library.db'
 });
 
+
 (async () => {
   // sync model to database
   await sequelize.sync({ force:true });

@@ -1,21 +1,41 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-
-  table
+  div.row
+    form(action='/books/results', method='post')
+      div.input-group.mb-3
+        input#search.form-control(type='search' name='search' placeholder='What would you like to find?')
+        input.btn.btn-outline-secondary(type='submit' value='Search')
+    
+  
+    
+  table.table.table-hover
       thead
         tr
-          th Title
-          th Author
-          th Genre
-          th Year
-          each book in books
-            tbody
-              tr
-                td
-                  a(href='book_detail.html')= book.title
-                td= book.author
-                td= book.genre
-                td= book.year
+          th.col-6(scope='col') Title
+          th.col-3(scope='col') Author
+          th.col-2(scope='col') Genre
+          th.col-1(scope='col') Year
+      tbody
+        each book in books
+          tr
+            td(scope='row')
+              a(href=`/books/${book.id}`)= book.title
+            td= book.author
+            td= book.genre
+            td= book.year
+  div.row.justify-content-between
+    div.col-auto
+      - var i = 0;
+      nav      
+        ul.pagination
+          while i < pages
+            - var m = i++ + 1;  
+            if(m == page) 
+              li.page-item.active    
+                a.page-link(href=`/books/page/${m}`)= m
+            else
+              li.page-item
+                a.page-link(href=`/books/page/${m}`)= m
+    div.col-auto
+      a.btn.btn-primary(href='/books/new') Create New Book

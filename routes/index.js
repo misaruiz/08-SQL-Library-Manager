@@ -23,6 +23,10 @@ router.get('/', asyncHandler(async (req, res, next) => {
   res.redirect('/books/page-1');
 }));
 
+router.get('/books', asyncHandler(async (req, res, next) => {
+  res.redirect('/books/page-1');
+}));
+
 // GET full list of books
 router.get('/books/page-:page', asyncHandler(async (req, res, next) => {
 

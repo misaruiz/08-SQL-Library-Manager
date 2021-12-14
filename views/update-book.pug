@@ -7,10 +7,24 @@ block content
             label.col-sm-2.col-form-label(for='title') Title
             div.col-sm-10
                 input#title.form-control(name='title' type='text' value=book.title)
+                if(errors)
+                    each error in errors
+                        if(error.path == 'title')
+                            div.invalid-feedback= error.message
+                            script.
+                                let titleInput = document.querySelector("#title");
+                                titleInput.classList.add('is-invalid');
         div.row.mb-3
             label.col-sm-2.col-form-label(for='author') Author
             div.col-sm-10
                 input#author.form-control(name='author' type='text' value=book.author)
+                if(errors)
+                    each error in errors
+                        if(error.path == 'author')
+                            div.invalid-feedback= error.message
+                            script.
+                                let authorInput = document.querySelector("#author");
+                                authorInput.classList.add('is-invalid');
         div.row.mb-3 
             label.col-sm-2.col-form-label(for='genre') Genre
             div.col-sm-10
